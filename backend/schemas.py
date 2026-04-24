@@ -9,7 +9,7 @@ class ComplaintBase(BaseModel):
     category: str
 
 class ComplaintCreate(ComplaintBase):
-    pass # user_id hum token se nikalenge, manually bhejne ki zaroorat nahi
+    pass 
 
 class ComplaintResponse(ComplaintBase):
     id: int
@@ -18,32 +18,33 @@ class ComplaintResponse(ComplaintBase):
     user_id: int
 
     class Config:
-        from_attributes = True # SQLAlchemy models ko Pydantic mein badalne ke liye
+        from_attributes = True 
 
 # --- USER SCHEMAS ---
-class UserCreate(BaseModel):
+class UserBase(BaseModel):
     username: str
-    email: EmailStr # Isse automatically format check ho jayega (@ hai ya nahi)
+    email: EmailStr
+
+class UserCreate(UserBase):
     password: str
 
 class UserLogin(BaseModel):
-    username: str # Isme email input liya jayega
+    email: EmailStr  # Swagger mein 'username' ki jagah 'email' dikhega toh confusion nahi hoga
     password: str
 
-class UserResponse(BaseModel):
+class UserResponse(UserBase):
     id: int
-    username: str
-    email: str
     is_admin: bool
+    role: str # Kyunki aapne models.py mein 'role' column rakha hai
 
     class Config:
         from_attributes = True
 
-# --- TOKEN SCHEMAS (Auth ke liye) ---
+# --- TOKEN SCHEMAS ---
 class Token(BaseModel):
     access_token: str
     token_type: str
-    is_admin: bool # React state update karne ke liye
+    is_admin: bool 
     username: str
 
 class TokenData(BaseModel):
